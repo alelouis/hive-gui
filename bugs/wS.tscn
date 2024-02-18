@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://r5jqf3rvkcy3"]
+
+[ext_resource type="PackedScene" uid="uid://2oddo2u0swsi" path="res://glb/spider.glb" id="1_mojjx"]
+[ext_resource type="Material" uid="uid://bcyskh8usx8wp" path="res://bugs/materials/white.tres" id="2_3g1ok"]
+
+[node name="spider" instance=ExtResource("1_mojjx")]
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
+
+[node name="spider2" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_3g1ok")

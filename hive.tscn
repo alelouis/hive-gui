@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://3rks5tr7jm3"]
+
+[ext_resource type="Script" path="res://client.gd" id="1_3xsmj"]
+[ext_resource type="Script" path="res://test.gd" id="2_e32v7"]
+[ext_resource type="Script" path="res://generate.gd" id="4_4mo0l"]
+[ext_resource type="Script" path="res://Origin.gd" id="4_deetd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hij6"]
+albedo_color = Color(0.972549, 0.847059, 0.737255, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m451s"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Server" type="Node" parent="."]
+script = ExtResource("2_e32v7")
+
+[node name="TestServer" type="Node" parent="."]
+script = ExtResource("1_3xsmj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.706872, -0.409186, 0.576974, 1.17229e-16, 0.815694, 0.578484, -0.707341, -0.408914, 0.576591, 3.61491, 2.35956, 2.70124)
+light_energy = 0.705
+shadow_enabled = true
+shadow_blur = 1.517
+
+[node name="Generate" type="Node" parent="."]
+script = ExtResource("4_4mo0l")
+
+[node name="Origin" type="Node3D" parent="."]
+script = ExtResource("4_deetd")
+
+[node name="Camera3D" type="Camera3D" parent="Origin"]
+unique_name_in_owner = true
+transform = Transform3D(1, -6.97574e-16, -1.5246e-23, -1.5246e-23, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 2.08165e-12, 8, 2.08165e-12)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.67595, -1.64149)
+light_color = Color(0.835294, 0.909804, 0.905882, 1)
+shadow_enabled = true
+
+[node name="Board" type="MeshInstance3D" parent="."]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, -0.379425, 0)
+material_override = SubResource("StandardMaterial3D_0hij6")
+mesh = SubResource("PlaneMesh_m451s")

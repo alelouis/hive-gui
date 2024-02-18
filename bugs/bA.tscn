@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://dv6fnqbhksl80"]
+
+[ext_resource type="PackedScene" uid="uid://crychr4pas6gm" path="res://glb/ant.glb" id="1_klfeh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cq6p3"]
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="ant" instance=ExtResource("1_klfeh")]
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
+
+[node name="ant2" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_cq6p3")

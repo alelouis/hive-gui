@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://ceo66wi3t3k4m"]
+
+[ext_resource type="PackedScene" uid="uid://cdu8g8hqx80ks" path="res://glb/bee.glb" id="1_ui811"]
+[ext_resource type="Material" uid="uid://bcyskh8usx8wp" path="res://bugs/materials/white.tres" id="2_iqudg"]
+
+[node name="bee" instance=ExtResource("1_ui811")]
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
+
+[node name="bee2" parent="." index="0"]
+material_override = ExtResource("2_iqudg")
