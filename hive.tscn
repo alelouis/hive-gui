@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://3rks5tr7jm3"]
 
-[ext_resource type="Script" path="res://client.gd" id="1_3xsmj"]
-[ext_resource type="Script" path="res://test.gd" id="2_e32v7"]
-[ext_resource type="Script" path="res://generate.gd" id="4_4mo0l"]
-[ext_resource type="Script" path="res://Origin.gd" id="4_deetd"]
+[ext_resource type="Script" path="res://scripts/test.gd" id="1_f62ic"]
+[ext_resource type="Script" path="res://scripts/client.gd" id="2_flhco"]
+[ext_resource type="Script" path="res://scripts/generate.gd" id="3_mmdec"]
+[ext_resource type="Script" path="res://scripts/Origin.gd" id="4_usp4i"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hij6"]
 albedo_color = Color(0.972549, 0.847059, 0.737255, 1)
@@ -13,10 +13,10 @@ albedo_color = Color(0.972549, 0.847059, 0.737255, 1)
 [node name="Node3D" type="Node3D"]
 
 [node name="Server" type="Node" parent="."]
-script = ExtResource("2_e32v7")
+script = ExtResource("1_f62ic")
 
 [node name="TestServer" type="Node" parent="."]
-script = ExtResource("1_3xsmj")
+script = ExtResource("2_flhco")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.706872, -0.409186, 0.576974, 1.17229e-16, 0.815694, 0.578484, -0.707341, -0.408914, 0.576591, 3.61491, 2.35956, 2.70124)
@@ -25,10 +25,10 @@ shadow_enabled = true
 shadow_blur = 1.517
 
 [node name="Generate" type="Node" parent="."]
-script = ExtResource("4_4mo0l")
+script = ExtResource("3_mmdec")
 
 [node name="Origin" type="Node3D" parent="."]
-script = ExtResource("4_deetd")
+script = ExtResource("4_usp4i")
 
 [node name="Camera3D" type="Camera3D" parent="Origin"]
 unique_name_in_owner = true
