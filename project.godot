@@ -15,7 +15,13 @@ run/main_scene="res://hive.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=2000
+window/size/viewport_height=2000
+window/size/resizable=false
+window/stretch/scale=1.5
+
 [rendering]
 
-renderer/rendering_method="mobile"
-environment/defaults/default_clear_color=Color(0.701961, 0.603922, 0.486275, 1)
+environment/defaults/default_clear_color=Color(0.192157, 0.0941176, 0.0352941, 1)

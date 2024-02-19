@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://du7jpmdqybi2l"]
+
+[ext_resource type="PackedScene" uid="uid://d0fw5hk6b67sn" path="res://glb/bee.glb" id="1_37k6m"]
+[ext_resource type="Material" uid="uid://b2grh3nffxqno" path="res://bugs/materials/white_unshaded.tres" id="2_4sjps"]
+
+[node name="bee" instance=ExtResource("1_37k6m")]
+
+[node name="Curve" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_4sjps")

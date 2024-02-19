@@ -14,24 +14,19 @@ func _ready() -> void:
 	
 func connect_to_host(host: String, port: int) -> void:
 	print("Connecting to %s:%d" % [host, port])
-	# Reset status so we can tell if it changes to error again.
 	_status = _stream.STATUS_NONE
 	if _stream.connect_to_host(host, port) != OK:
 		print("Error connecting to host.")
 		emit_signal("error")
 
-func send(data: PackedByteArray) -> bool:
+func send(string: String) -> bool:
 	if _status != _stream.STATUS_CONNECTED:
 		print("Error: Stream is not currently connected.")
 		return false
-	var error: int = _stream.put_data(data)
-	if error != OK:
-		print("Error writing to stream: ", error)
-		return false
+	_stream.put_utf8_string(string)
 	return true
 	
 func _process(delta: float) -> void:
-
 	_stream.poll()
 	var new_status: int = _stream.get_status()
 	if new_status != _status:

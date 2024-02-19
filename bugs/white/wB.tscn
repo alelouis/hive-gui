@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://bugs/piece_white.tscn" id="1_2y3q8"]
+[ext_resource type="PackedScene" path="res://bugs/beetle.tscn" id="2_8tivb"]
+
+[node name="@Node3D@2" type="Node3D"]
+
+[node name="piece" type="Node3D" parent="." instance=ExtResource("1_2y3q8")]
+
+[node name="beetle" type="Node3D" parent="." instance=ExtResource("2_8tivb")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0.47, 0)

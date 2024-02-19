@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsgkrvs7qvrok"]
+
+[ext_resource type="PackedScene" uid="uid://4sybp46me2be" path="res://glb/beetle.glb" id="1_xp620"]
+[ext_resource type="Material" uid="uid://b2grh3nffxqno" path="res://bugs/materials/white_unshaded.tres" id="2_v5inj"]
+
+[node name="beetle" instance=ExtResource("1_xp620")]
+
+[node name="Curve_004" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_v5inj")

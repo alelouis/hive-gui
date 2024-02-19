@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhldtti5gl61v"]
+
+[ext_resource type="PackedScene" uid="uid://da1dcekrsiaf4" path="res://glb/spider.glb" id="1_hnncm"]
+[ext_resource type="Material" uid="uid://b2grh3nffxqno" path="res://bugs/materials/white_unshaded.tres" id="2_dht50"]
+
+[node name="spider" instance=ExtResource("1_hnncm")]
+
+[node name="Curve_001" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_dht50")

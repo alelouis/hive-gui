@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://w45mw0vllt41"]
+
+[ext_resource type="PackedScene" uid="uid://b5catnechj32f" path="res://glb/piece.glb" id="1_5lw2m"]
+[ext_resource type="Material" uid="uid://gc7uxy6rb6qc" path="res://bugs/materials/piece_black.tres" id="2_p50ml"]
+
+[node name="piece" instance=ExtResource("1_5lw2m")]
+
+[node name="Circle" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_p50ml")

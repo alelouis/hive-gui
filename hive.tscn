@@ -1,16 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://3rks5tr7jm3"]
+[gd_scene load_steps=8 format=3 uid="uid://3rks5tr7jm3"]
 
 [ext_resource type="Script" path="res://scripts/test.gd" id="1_f62ic"]
+[ext_resource type="Script" path="res://hive.gd" id="1_j5bog"]
 [ext_resource type="Script" path="res://scripts/client.gd" id="2_flhco"]
 [ext_resource type="Script" path="res://scripts/generate.gd" id="3_mmdec"]
 [ext_resource type="Script" path="res://scripts/Origin.gd" id="4_usp4i"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hij6"]
-albedo_color = Color(0.972549, 0.847059, 0.737255, 1)
+albedo_color = Color(0.0470588, 0.0862745, 0.152941, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_m451s"]
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_j5bog")
 
 [node name="Server" type="Node" parent="."]
 script = ExtResource("1_f62ic")
@@ -19,8 +21,8 @@ script = ExtResource("1_f62ic")
 script = ExtResource("2_flhco")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.706872, -0.409186, 0.576974, 1.17229e-16, 0.815694, 0.578484, -0.707341, -0.408914, 0.576591, 3.61491, 2.35956, 2.70124)
-light_energy = 0.705
+transform = Transform3D(0.706872, -0.409186, 0.576974, 1.17229e-16, 0.815694, 0.578484, -0.707341, -0.408914, 0.576591, 3.83626, 2.56363, 2.70386)
+light_energy = 0.528
 shadow_enabled = true
 shadow_blur = 1.517
 
@@ -32,14 +34,58 @@ script = ExtResource("4_usp4i")
 
 [node name="Camera3D" type="Camera3D" parent="Origin"]
 unique_name_in_owner = true
-transform = Transform3D(1, -6.97574e-16, -1.5246e-23, -1.5246e-23, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 2.08165e-12, 8, 2.08165e-12)
+transform = Transform3D(1, -6.97574e-16, -1.52459e-23, -1.5246e-23, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 2.08165e-12, 36.9708, 2.08165e-12)
+current = true
+fov = 11.2
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.67595, -1.64149)
-light_color = Color(0.835294, 0.909804, 0.905882, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.28471, -2.00821)
+light_color = Color(0.584314, 0.317647, 0.321569, 1)
+light_energy = 4.838
 shadow_enabled = true
+shadow_bias = 1.429
+shadow_transmittance_bias = -2.784
+shadow_opacity = 0.93
 
 [node name="Board" type="MeshInstance3D" parent="."]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, -0.379425, 0)
 material_override = SubResource("StandardMaterial3D_0hij6")
 mesh = SubResource("PlaneMesh_m451s")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -502.0
+offset_right = 502.0
+offset_bottom = 100.0
+grow_horizontal = 2
+columns = 2
+
+[node name="command" type="TextEdit" parent="Control/GridContainer"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Enter a new command"
+caret_blink = true
+
+[node name="response" type="TextEdit" parent="Control/GridContainer"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Type command"
+
+[connection signal="text_changed" from="Control/GridContainer/command" to="Server" method="_on_command_text_changed"]

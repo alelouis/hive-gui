@@ -1,18 +1,16 @@
 extends Node
 
-
-var scene = preload("res://piece.tscn")
-
 var name_to_tiles = {}
 var name_to_instances = {}
 
 func _ready():
 	var bugs = {}
 	var color_bug
+	var colors = {"w": "white", "b": "black"}
 	for bug in ["A", "B", "Q", "G", "S"]:
 		for color in ["w", "b"]:
 			color_bug = "%s%s"%[color, bug]
-			bugs[color_bug] = load("res://bugs/%s.tscn"%color_bug)
+			bugs[color_bug] = load("res://bugs//%s//%s.tscn"%[colors[color], color_bug])
 		
 	var tile
 	var out
@@ -88,8 +86,8 @@ func move_towards(tile, direction):
 	return target_tile
 
 func hex_to_xy(tile):
-	var size = 0.95
+	var size = 1.1
 	var x = size * (sqrt(3) * tile[0] + sqrt(3)/2 * tile[1])
 	var y = size * (3./2 * tile[1])
-	return Vector3(x, 0, y)
+	return Vector3(x, -0.3, y)
 

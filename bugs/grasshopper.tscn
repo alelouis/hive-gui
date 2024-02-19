@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://hjbv4hkh1bx3"]
+
+[ext_resource type="PackedScene" uid="uid://bbvv34lffhxur" path="res://glb/grasshopper.glb" id="1_jhmk1"]
+[ext_resource type="Material" uid="uid://b2grh3nffxqno" path="res://bugs/materials/white_unshaded.tres" id="2_un45w"]
+
+[node name="grasshopper" instance=ExtResource("1_jhmk1")]
+
+[node name="Curve_002" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_un45w")

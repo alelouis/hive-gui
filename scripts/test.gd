@@ -8,12 +8,12 @@ const Client = preload("res://scripts/client.gd")
 var _client: Client = Client.new()
 
 func _ready() -> void:
-#	_client.connected.connect(_handle_client_connected)
-#	_client.disconnected.connect(_handle_client_disconnected)
-#	_client.error.connect(_handle_client_error)
-#	_client.data.connect(_handle_client_data)
-#	add_child(_client)
-#	_client.connect_to_host(HOST, PORT)
+	_client.connected.connect(_handle_client_connected)
+	_client.disconnected.connect(_handle_client_disconnected)
+	_client.error.connect(_handle_client_error)
+	_client.data.connect(_handle_client_data)
+	add_child(_client)
+	_client.connect_to_host(HOST, PORT)
 	pass
 
 func _connect_after_timeout(timeout: float) -> void:
@@ -24,9 +24,8 @@ func _handle_client_connected() -> void:
 	print("Client connected to server.")
 
 func _handle_client_data(data: PackedByteArray) -> void:
-	print("Client data: ", data.get_string_from_utf8())
-	var message: PackedByteArray = [97, 99, 107] # Bytes for "ack" in ASCII
-	_client.send(message)
+	var client_data = data.get_string_from_utf8()
+	$"../Control/GridContainer/response".text = client_data
 
 func _handle_client_disconnected() -> void:
 	print("Client disconnected from server.")
@@ -35,3 +34,10 @@ func _handle_client_disconnected() -> void:
 func _handle_client_error() -> void:
 	print("Client error.")
 	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
+
+func _on_command_text_changed():
+	if $"../Control/GridContainer/command".text.ends_with("\n"):
+		var string_array = $"../Control/GridContainer/command".text
+		$"../Control/GridContainer/command".text = ""
+		print("sending string: %s"%string_array)
+		_client.send(string_array)
