@@ -1,0 +1,216 @@
+[00:00:02.635] (1e2fa6500) INFO   new command received: newgame
+[00:00:02.635] (1e2fa6500) INFO   starting new game
+[00:00:02.635] (1e2fa6500) INFO   turn number: 0
+[00:00:02.635] (1e2fa6500) INFO   turn color: White
+[00:00:02.841] (1e2fa6500) INFO   new command received: validmoves
+[00:00:02.841] (1e2fa6500) INFO   requesting valid moves
+[00:00:04.635] (1e2fa6500) INFO   new command received: play wQ
+[00:00:04.636] (1e2fa6500) INFO   new move requested: wQ
+[00:00:04.636] (1e2fa6500) INFO   wQ
+[00:00:04.636] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:04.636] (1e2fa6500) INFO   move wQ played
+[00:00:04.636] (1e2fa6500) INFO   turn number: 1
+[00:00:04.636] (1e2fa6500) INFO   turn color: Black
+[00:00:04.842] (1e2fa6500) INFO   new command received: validmoves
+[00:00:04.842] (1e2fa6500) INFO   requesting valid moves
+[00:00:05.602] (1e2fa6500) INFO   new command received: play bQ -wQ
+[00:00:05.602] (1e2fa6500) INFO   new move requested: bQ -wQ
+[00:00:05.602] (1e2fa6500) INFO   bQ -wQ
+[00:00:05.603] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:05.603] (1e2fa6500) INFO   move bQ -wQ played
+[00:00:05.603] (1e2fa6500) INFO   turn number: 2
+[00:00:05.603] (1e2fa6500) INFO   turn color: White
+[00:00:05.805] (1e2fa6500) INFO   new command received: validmoves
+[00:00:05.805] (1e2fa6500) INFO   requesting valid moves
+[00:00:05.806] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:05.806] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:08.252] (1e2fa6500) INFO   new command received: play wS1 wQ/
+[00:00:08.252] (1e2fa6500) INFO   new move requested: wS1 wQ/
+[00:00:08.252] (1e2fa6500) INFO   wS1 wQ/
+[00:00:08.252] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:08.252] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:08.253] (1e2fa6500) DEBUG  placing wS1 on tile (q: 1, r: -1, s: 0)
+[00:00:08.253] (1e2fa6500) INFO   move wS1 wQ/ played
+[00:00:08.253] (1e2fa6500) INFO   turn number: 3
+[00:00:08.253] (1e2fa6500) INFO   turn color: Black
+[00:00:08.458] (1e2fa6500) INFO   new command received: validmoves
+[00:00:08.459] (1e2fa6500) INFO   requesting valid moves
+[00:00:08.459] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:08.459] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:09.503] (1e2fa6500) INFO   new command received: play bG1 -bQ
+[00:00:09.503] (1e2fa6500) INFO   new move requested: bG1 -bQ
+[00:00:09.503] (1e2fa6500) INFO   bG1 -bQ
+[00:00:09.503] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:09.503] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:09.504] (1e2fa6500) DEBUG  placing bG1 on tile (q: -2, r: 0, s: 2)
+[00:00:09.504] (1e2fa6500) INFO   move bG1 -bQ played
+[00:00:09.504] (1e2fa6500) INFO   turn number: 4
+[00:00:09.504] (1e2fa6500) INFO   turn color: White
+[00:00:09.705] (1e2fa6500) INFO   new command received: validmoves
+[00:00:09.705] (1e2fa6500) INFO   requesting valid moves
+[00:00:09.705] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:09.706] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:09.706] (1e2fa6500) DEBUG  removing wS1 from tile (q: 1, r: -1, s: 0)
+[00:00:09.707] (1e2fa6500) DEBUG  placing wS1 on tile (q: 1, r: -1, s: 0)
+[00:00:11.652] (1e2fa6500) INFO   new command received: play wS1 bQ\
+[00:00:11.653] (1e2fa6500) INFO   new move requested: wS1 bQ\
+[00:00:11.653] (1e2fa6500) INFO   wS1 bQ\
+[00:00:11.653] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:11.653] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:11.653] (1e2fa6500) DEBUG  removing wS1 from tile (q: 1, r: -1, s: 0)
+[00:00:11.653] (1e2fa6500) DEBUG  placing wS1 on tile (q: 1, r: -1, s: 0)
+[00:00:11.654] (1e2fa6500) DEBUG  removing wS1 from tile (q: 1, r: -1, s: 0)
+[00:00:11.654] (1e2fa6500) DEBUG  placing wS1 on tile (q: -1, r: 1, s: 0)
+[00:00:11.654] (1e2fa6500) INFO   move wS1 bQ\ played
+[00:00:11.654] (1e2fa6500) INFO   turn number: 5
+[00:00:11.654] (1e2fa6500) INFO   turn color: Black
+[00:00:11.860] (1e2fa6500) INFO   new command received: validmoves
+[00:00:11.860] (1e2fa6500) INFO   requesting valid moves
+[00:00:11.860] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:11.860] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:11.860] (1e2fa6500) DEBUG  removing bG1 from tile (q: -2, r: 0, s: 2)
+[00:00:11.861] (1e2fa6500) DEBUG  placing bG1 on tile (q: -2, r: 0, s: 2)
+[00:00:12.868] (1e2fa6500) INFO   new command received: play bG1 wQ-
+[00:00:12.869] (1e2fa6500) INFO   new move requested: bG1 wQ-
+[00:00:12.869] (1e2fa6500) INFO   bG1 wQ-
+[00:00:12.869] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:12.869] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:12.869] (1e2fa6500) DEBUG  removing bG1 from tile (q: -2, r: 0, s: 2)
+[00:00:12.869] (1e2fa6500) DEBUG  placing bG1 on tile (q: -2, r: 0, s: 2)
+[00:00:12.870] (1e2fa6500) DEBUG  removing bG1 from tile (q: -2, r: 0, s: 2)
+[00:00:12.870] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)
+[00:00:12.870] (1e2fa6500) INFO   move bG1 wQ- played
+[00:00:12.870] (1e2fa6500) INFO   turn number: 6
+[00:00:12.870] (1e2fa6500) INFO   turn color: White
+[00:00:13.075] (1e2fa6500) INFO   new command received: validmoves
+[00:00:13.075] (1e2fa6500) INFO   requesting valid moves
+[00:00:13.075] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:13.076] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:13.076] (1e2fa6500) DEBUG  removing wS1 from tile (q: -1, r: 1, s: 0)
+[00:00:13.076] (1e2fa6500) DEBUG  placing wS1 on tile (q: -1, r: 1, s: 0)
+[00:00:14.901] (1e2fa6500) INFO   new command received: play wS1 bG1-
+[00:00:14.901] (1e2fa6500) INFO   new move requested: wS1 bG1-
+[00:00:14.901] (1e2fa6500) INFO   wS1 bG1-
+[00:00:14.901] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:14.901] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:14.901] (1e2fa6500) DEBUG  removing wS1 from tile (q: -1, r: 1, s: 0)
+[00:00:14.901] (1e2fa6500) DEBUG  placing wS1 on tile (q: -1, r: 1, s: 0)
+[00:00:14.902] (1e2fa6500) DEBUG  removing wS1 from tile (q: -1, r: 1, s: 0)
+[00:00:14.902] (1e2fa6500) DEBUG  placing wS1 on tile (q: 2, r: 0, s: -2)
+[00:00:14.902] (1e2fa6500) INFO   move wS1 bG1- played
+[00:00:14.902] (1e2fa6500) INFO   turn number: 7
+[00:00:14.902] (1e2fa6500) INFO   turn color: Black
+[00:00:15.107] (1e2fa6500) INFO   new command received: validmoves
+[00:00:15.108] (1e2fa6500) INFO   requesting valid moves
+[00:00:15.108] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:15.108] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:15.108] (1e2fa6500) DEBUG  removing bG1 from tile (q: 1, r: 0, s: -1)
+[00:00:15.108] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)
+[00:00:15.985] (1e2fa6500) INFO   new command received: play bQ bQ/
+[00:00:15.985] (1e2fa6500) INFO   new move requested: bQ bQ/
+[00:00:15.985] (1e2fa6500) INFO   bQ bQ/
+[00:00:15.985] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:15.985] (1e2fa6500) DEBUG  placing bQ on tile (q: -1, r: 0, s: 1)
+[00:00:15.985] (1e2fa6500) DEBUG  removing bG1 from tile (q: 1, r: 0, s: -1)
+[00:00:15.986] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)
+[00:00:15.986] (1e2fa6500) DEBUG  removing bQ from tile (q: -1, r: 0, s: 1)
+[00:00:15.986] (1e2fa6500) DEBUG  placing bQ on tile (q: 0, r: -1, s: 1)
+[00:00:15.986] (1e2fa6500) INFO   move bQ bQ/ played
+[00:00:15.986] (1e2fa6500) INFO   turn number: 8
+[00:00:15.986] (1e2fa6500) INFO   turn color: White
+[00:00:16.191] (1e2fa6500) INFO   new command received: validmoves
+[00:00:16.191] (1e2fa6500) INFO   requesting valid moves
+[00:00:16.192] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:16.192] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:16.192] (1e2fa6500) DEBUG  removing wS1 from tile (q: 2, r: 0, s: -2)
+[00:00:16.192] (1e2fa6500) DEBUG  placing wS1 on tile (q: 2, r: 0, s: -2)
+[00:00:20.487] (1e2fa6500) INFO   new command received: play wS1 bQ/
+[00:00:20.487] (1e2fa6500) INFO   new move requested: wS1 bQ/
+[00:00:20.488] (1e2fa6500) INFO   wS1 bQ/
+[00:00:20.488] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:20.488] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:20.488] (1e2fa6500) DEBUG  removing wS1 from tile (q: 2, r: 0, s: -2)
+[00:00:20.488] (1e2fa6500) DEBUG  placing wS1 on tile (q: 2, r: 0, s: -2)
+[00:00:20.488] (1e2fa6500) DEBUG  removing wS1 from tile (q: 2, r: 0, s: -2)
+[00:00:20.489] (1e2fa6500) DEBUG  placing wS1 on tile (q: 1, r: -2, s: 1)
+[00:00:20.489] (1e2fa6500) INFO   move wS1 bQ/ played
+[00:00:20.489] (1e2fa6500) INFO   turn number: 9
+[00:00:20.489] (1e2fa6500) INFO   turn color: Black
+[00:00:20.694] (1e2fa6500) INFO   new command received: validmoves
+[00:00:20.695] (1e2fa6500) INFO   requesting valid moves
+[00:00:20.695] (1e2fa6500) DEBUG  removing bQ from tile (q: 0, r: -1, s: 1)
+[00:00:20.695] (1e2fa6500) DEBUG  placing bQ on tile (q: 0, r: -1, s: 1)
+[00:00:20.695] (1e2fa6500) DEBUG  removing bG1 from tile (q: 1, r: 0, s: -1)
+[00:00:20.695] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)
+[00:00:22.752] (1e2fa6500) INFO   new command received: play bG1 -wQ
+[00:00:22.752] (1e2fa6500) INFO   new move requested: bG1 -wQ
+[00:00:22.752] (1e2fa6500) INFO   bG1 -wQ
+[00:00:22.753] (1e2fa6500) DEBUG  removing bQ from tile (q: 0, r: -1, s: 1)
+[00:00:22.753] (1e2fa6500) DEBUG  placing bQ on tile (q: 0, r: -1, s: 1)
+[00:00:22.753] (1e2fa6500) DEBUG  removing bG1 from tile (q: 1, r: 0, s: -1)
+[00:00:22.753] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)
+[00:00:22.753] (1e2fa6500) DEBUG  removing bG1 from tile (q: 1, r: 0, s: -1)
+[00:00:22.753] (1e2fa6500) DEBUG  placing bG1 on tile (q: -1, r: 0, s: 1)
+[00:00:22.753] (1e2fa6500) INFO   move bG1 -wQ played
+[00:00:22.753] (1e2fa6500) INFO   turn number: 10
+[00:00:22.753] (1e2fa6500) INFO   turn color: White
+[00:00:22.957] (1e2fa6500) INFO   new command received: validmoves
+[00:00:22.957] (1e2fa6500) INFO   requesting valid moves
+[00:00:22.957] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:22.958] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:22.958] (1e2fa6500) DEBUG  removing wS1 from tile (q: 1, r: -2, s: 1)
+[00:00:22.958] (1e2fa6500) DEBUG  placing wS1 on tile (q: 1, r: -2, s: 1)
+[00:00:24.084] (1e2fa6500) INFO   new command received: play wS1 wQ\
+[00:00:24.084] (1e2fa6500) INFO   new move requested: wS1 wQ\
+[00:00:24.084] (1e2fa6500) INFO   wS1 wQ\
+[00:00:24.085] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:24.085] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:24.085] (1e2fa6500) DEBUG  removing wS1 from tile (q: 1, r: -2, s: 1)
+[00:00:24.085] (1e2fa6500) DEBUG  placing wS1 on tile (q: 1, r: -2, s: 1)
+[00:00:24.085] (1e2fa6500) DEBUG  removing wS1 from tile (q: 1, r: -2, s: 1)
+[00:00:24.085] (1e2fa6500) DEBUG  placing wS1 on tile (q: 0, r: 1, s: -1)
+[00:00:24.086] (1e2fa6500) INFO   move wS1 wQ\ played
+[00:00:24.086] (1e2fa6500) INFO   turn number: 11
+[00:00:24.086] (1e2fa6500) INFO   turn color: Black
+[00:00:24.291] (1e2fa6500) INFO   new command received: validmoves
+[00:00:24.291] (1e2fa6500) INFO   requesting valid moves
+[00:00:24.291] (1e2fa6500) DEBUG  removing bQ from tile (q: 0, r: -1, s: 1)
+[00:00:24.292] (1e2fa6500) DEBUG  placing bQ on tile (q: 0, r: -1, s: 1)
+[00:00:24.292] (1e2fa6500) DEBUG  removing bG1 from tile (q: -1, r: 0, s: 1)
+[00:00:24.292] (1e2fa6500) DEBUG  placing bG1 on tile (q: -1, r: 0, s: 1)
+[00:00:25.986] (1e2fa6500) INFO   new command received: play bG1 wQ-
+[00:00:25.987] (1e2fa6500) INFO   new move requested: bG1 wQ-
+[00:00:25.987] (1e2fa6500) INFO   bG1 wQ-
+[00:00:25.987] (1e2fa6500) DEBUG  removing bQ from tile (q: 0, r: -1, s: 1)
+[00:00:25.987] (1e2fa6500) DEBUG  placing bQ on tile (q: 0, r: -1, s: 1)
+[00:00:25.987] (1e2fa6500) DEBUG  removing bG1 from tile (q: -1, r: 0, s: 1)
+[00:00:25.987] (1e2fa6500) DEBUG  placing bG1 on tile (q: -1, r: 0, s: 1)
+[00:00:25.987] (1e2fa6500) DEBUG  removing bG1 from tile (q: -1, r: 0, s: 1)
+[00:00:25.987] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)
+[00:00:25.987] (1e2fa6500) INFO   move bG1 wQ- played
+[00:00:25.988] (1e2fa6500) INFO   turn number: 12
+[00:00:25.988] (1e2fa6500) INFO   turn color: White
+[00:00:26.193] (1e2fa6500) INFO   new command received: validmoves
+[00:00:26.193] (1e2fa6500) INFO   requesting valid moves
+[00:00:26.193] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:26.193] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:26.193] (1e2fa6500) DEBUG  removing wS1 from tile (q: 0, r: 1, s: -1)
+[00:00:26.193] (1e2fa6500) DEBUG  placing wS1 on tile (q: 0, r: 1, s: -1)
+[00:00:27.935] (1e2fa6500) INFO   new command received: play wS1 bG1/
+[00:00:27.935] (1e2fa6500) INFO   new move requested: wS1 bG1/
+[00:00:27.935] (1e2fa6500) INFO   wS1 bG1/
+[00:00:27.935] (1e2fa6500) DEBUG  removing wQ from tile (q: 0, r: 0, s: 0)
+[00:00:27.935] (1e2fa6500) DEBUG  placing wQ on tile (q: 0, r: 0, s: 0)
+[00:00:27.935] (1e2fa6500) DEBUG  removing wS1 from tile (q: 0, r: 1, s: -1)
+[00:00:27.935] (1e2fa6500) DEBUG  placing wS1 on tile (q: 0, r: 1, s: -1)
+[00:00:27.936] (1e2fa6500) DEBUG  removing wS1 from tile (q: 0, r: 1, s: -1)
+[00:00:27.936] (1e2fa6500) DEBUG  placing wS1 on tile (q: 2, r: -1, s: -1)
+[00:00:27.936] (1e2fa6500) INFO   move wS1 bG1/ played
+[00:00:27.936] (1e2fa6500) INFO   turn number: 13
+[00:00:27.936] (1e2fa6500) INFO   turn color: Black
+[00:00:28.137] (1e2fa6500) INFO   new command received: validmoves
+[00:00:28.138] (1e2fa6500) INFO   requesting valid moves
+[00:00:28.138] (1e2fa6500) DEBUG  removing bQ from tile (q: 0, r: -1, s: 1)
+[00:00:28.138] (1e2fa6500) DEBUG  placing bQ on tile (q: 0, r: -1, s: 1)
+[00:00:28.138] (1e2fa6500) DEBUG  removing bG1 from tile (q: 1, r: 0, s: -1)
+[00:00:28.138] (1e2fa6500) DEBUG  placing bG1 on tile (q: 1, r: 0, s: -1)

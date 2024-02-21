@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://vc7uhfqqaq2n"]
 
-[ext_resource type="PackedScene" path="res://bugs/piece_black.tscn" id="1_71pub"]
-[ext_resource type="PackedScene" path="res://bugs/spider.tscn" id="2_of2qh"]
+[ext_resource type="PackedScene" uid="uid://w45mw0vllt41" path="res://bugs/piece_black.tscn" id="1_mwuhk"]
+[ext_resource type="PackedScene" uid="uid://dhldtti5gl61v" path="res://bugs/spider.tscn" id="2_wrfy6"]
 
-[node name="@Node3D@3" type="Node3D"]
+[node name="_Node3D_3" type="Node3D"]
 
-[node name="piece" type="Node3D" parent="." instance=ExtResource("1_71pub")]
+[node name="piece" parent="." instance=ExtResource("1_mwuhk")]
 
-[node name="spider" type="Node3D" parent="." instance=ExtResource("2_of2qh")]
+[node name="spider" parent="." instance=ExtResource("2_wrfy6")]
 transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0.47, 0)

@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" path="res://bugs/piece_white.tscn" id="1_xovjd"]
-[ext_resource type="PackedScene" path="res://bugs/ant.tscn" id="2_gyn2g"]
+[ext_resource type="PackedScene" path="res://bugs/piece_white.tscn" id="1_v4hxb"]
+[ext_resource type="PackedScene" path="res://bugs/ant.tscn" id="2_b7jhi"]
 
 [node name="@Node3D@2" type="Node3D"]
 
-[node name="piece" type="Node3D" parent="." instance=ExtResource("1_xovjd")]
+[node name="piece" type="Node3D" parent="." instance=ExtResource("1_v4hxb")]
 
-[node name="ant" type="Node3D" parent="." instance=ExtResource("2_gyn2g")]
+[node name="ant" type="Node3D" parent="." instance=ExtResource("2_b7jhi")]
 transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0.47, 0)

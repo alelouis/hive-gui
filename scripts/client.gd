@@ -40,7 +40,6 @@ func _process(delta: float) -> void:
 			_stream.STATUS_CONNECTED:
 				print("Connected to host.")
 				emit_signal("connected")
-				emit_signal("data", [0, 0, 0])
 			_stream.STATUS_ERROR:
 				print("Error with socket stream.")
 				emit_signal("error")
@@ -48,8 +47,6 @@ func _process(delta: float) -> void:
 	if _status == _stream.STATUS_CONNECTED:
 		var available_bytes: int = _stream.get_available_bytes()
 		if available_bytes > 0:
-			
-			print("available bytes: ", available_bytes)
 			var data: Array = _stream.get_partial_data(available_bytes)
 			# Check for read error.
 			if data[0] != OK:

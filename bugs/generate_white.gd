@@ -26,11 +26,9 @@ func _ready():
 		bug_scene = load("res://bugs/%s.tscn"%bug).instantiate()
 		bug_scene.set_position(Vector3(0, 0.470, 0))
 		bug_scene.set_scale(Vector3(1.2, 1.2, 1.2))
-		print(bug_scene.get_children()[0])
 		
 		bugs_scenes[bug] = bug_scene
 		node.add_child(bugs_scenes[bug])
-	
 	
 	for bug in bugs:
 		bugs_scenes[bug].owner = node

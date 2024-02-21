@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bowole3jhhsf7"]
+
+[ext_resource type="Shader" path="res://bugs/materials/candidate.gdshader" id="1_qcvul"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w27re"]
+render_priority = -2
+blend_mode = 2
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0.054902, 0.160784, 0.0941176, 1)
+grow = true
+grow_amount = 0.05
+
+[resource]
+render_priority = 0
+next_pass = SubResource("StandardMaterial3D_w27re")
+shader = ExtResource("1_qcvul")
+shader_parameter/emission_color = Color(0, 0, 0, 1)
+shader_parameter/emission_amount = 10.472
+shader_parameter/rim_sharpness = 1.721

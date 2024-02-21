@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://d1d08xx5338ui"]
+
+[ext_resource type="PackedScene" uid="uid://b5catnechj32f" path="res://glb/piece.glb" id="1_4ck5c"]
+[ext_resource type="Script" path="res://bugs/piece_candidate.gd" id="2_n682y"]
+[ext_resource type="Material" uid="uid://bowole3jhhsf7" path="res://bugs/materials/candidate.tres" id="2_wbkan"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_0knoo"]
+margin = 0.05
+height = 0.5
+radius = 1.0
+
+[node name="piece" instance=ExtResource("1_4ck5c")]
+script = ExtResource("2_n682y")
+
+[node name="Circle" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_wbkan")
+
+[node name="Area3D" type="Area3D" parent="Circle" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Circle/Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.2, 2.08165e-12)
+shape = SubResource("CylinderShape3D_0knoo")
+
+[connection signal="input_event" from="Circle/Area3D" to="." method="_on_area_3d_input_event"]

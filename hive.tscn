@@ -20,23 +20,22 @@ script = ExtResource("1_f62ic")
 [node name="TestServer" type="Node" parent="."]
 script = ExtResource("2_flhco")
 
+[node name="Generate" type="Node" parent="."]
+script = ExtResource("3_mmdec")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.706872, -0.409186, 0.576974, 1.17229e-16, 0.815694, 0.578484, -0.707341, -0.408914, 0.576591, 3.83626, 2.56363, 2.70386)
 light_energy = 0.528
 shadow_enabled = true
 shadow_blur = 1.517
 
-[node name="Generate" type="Node" parent="."]
-script = ExtResource("3_mmdec")
-
 [node name="Origin" type="Node3D" parent="."]
 script = ExtResource("4_usp4i")
 
 [node name="Camera3D" type="Camera3D" parent="Origin"]
 unique_name_in_owner = true
-transform = Transform3D(1, -6.97574e-16, -1.52459e-23, -1.5246e-23, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 2.08165e-12, 36.9708, 2.08165e-12)
-current = true
-fov = 11.2
+transform = Transform3D(1, -6.76539e-16, 1.19292e-16, 1.19292e-16, 0.34202, 0.939693, -6.76539e-16, -0.939693, 0.34202, 2.08165e-12, 30, 11.13)
+fov = 11.0
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.28471, -2.00821)
@@ -59,16 +58,42 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
+
+[node name="HFlowContainer" type="HFlowContainer" parent="Control"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 350.0
+offset_bottom = 162.0
+
+[node name="Button" type="Button" parent="Control/HFlowContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "New game"
+
+[node name="ItemList" type="ItemList" parent="Control/HFlowContainer"]
+custom_minimum_size = Vector2(300, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 40
+auto_height = true
 
 [node name="GridContainer" type="GridContainer" parent="Control"]
+visible = false
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -502.0
-offset_right = 502.0
-offset_bottom = 100.0
+anchor_bottom = 1.0
+offset_left = -702.0
+offset_top = -304.0
+offset_right = 702.0
 grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
 columns = 2
 
 [node name="command" type="TextEdit" parent="Control/GridContainer"]
@@ -76,16 +101,44 @@ custom_minimum_size = Vector2(500, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 20
-placeholder_text = "Enter a new command"
+theme_override_font_sizes/font_size = 30
+placeholder_text = "Move String"
+draw_control_chars = true
+draw_tabs = true
+draw_spaces = true
 caret_blink = true
 
+[node name="Label" type="Label" parent="Control/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+
+[node name="client_request" type="TextEdit" parent="Control/GridContainer"]
+custom_minimum_size = Vector2(500, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Client command"
+editable = false
+draw_control_chars = true
+draw_tabs = true
+draw_spaces = true
+
 [node name="response" type="TextEdit" parent="Control/GridContainer"]
-custom_minimum_size = Vector2(500, 100)
+custom_minimum_size = Vector2(900, 200)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 20
-placeholder_text = "Type command"
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Server response"
+editable = false
+wrap_mode = 1
+draw_control_chars = true
+draw_tabs = true
+draw_spaces = true
 
-[connection signal="text_changed" from="Control/GridContainer/command" to="Server" method="_on_command_text_changed"]
+[connection signal="server_response" from="Server" to="Generate" method="_on_server_server_response"]
+[connection signal="new_piece" from="Generate" to="Origin" method="_on_generate_new_piece"]
+[connection signal="pressed" from="Control/HFlowContainer/Button" to="Generate" method="_on_button_pressed"]
+[connection signal="item_selected" from="Control/HFlowContainer/ItemList" to="Generate" method="_on_item_list_item_selected"]
+[connection signal="text_changed" from="Control/GridContainer/command" to="Generate" method="_on_command_text_changed"]
+[connection signal="text_set" from="Control/GridContainer/client_request" to="Server" method="_on_client_request_text_set"]
