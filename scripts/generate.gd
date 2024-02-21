@@ -2,6 +2,7 @@ extends Node
 
 signal new_piece
 
+var current_turn_color
 var name_to_tiles = {}
 var name_to_instances = {}
 var bugs = {}
@@ -16,6 +17,8 @@ var tiles_to_moves = {}
 var last_selected_piece = null
 var selected_piece = null
 
+var SELECT_GROW = 0.09
+var DEFAULT_GROW = 0.03
 
 func _ready():
 	var color_bug
@@ -25,6 +28,7 @@ func _ready():
 			color_bug = "%s%s"%[color, bug]
 			bugs[color_bug] = load("res://bugs//%s//%s.tscn"%[colors[color], color_bug])
 	candidate_scene = preload("res://bugs//piece_candidate.tscn")
+	current_turn_color = "w"
 	
 	
 func process_move_string(move_string: String, name_to_tiles: Dictionary):
@@ -109,6 +113,10 @@ func place_or_move(move_string):
 	name_to_instances[source].set_position(hex_to_xy(tile))
 	name_to_tiles[source] = tile
 	emit_signal("new_piece", name_to_instances)
+	if current_turn_color == "w":
+		current_turn_color = "b"
+	else:
+		current_turn_color = "w"
 
 func _on_piece_selected(item):
 	clear_candidates()
@@ -116,11 +124,12 @@ func _on_piece_selected(item):
 	if item != selected_piece:
 		last_selected_piece = selected_piece
 		selected_piece = item
-	if last_selected_piece != null and name_to_instances.has(last_selected_piece):
-		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1))
 		
-	if name_to_instances.has(selected_piece):
-		change_piece_color_highlight(selected_piece, Color(0, 1, 0))
+	if last_selected_piece != null and name_to_instances.has(last_selected_piece):
+		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW)
+		
+	if name_to_instances.has(selected_piece) and current_turn_color == selected_piece.substr(0, 1):
+		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW)
 			
 	if valid_moves.has(selected_piece):
 		for position in valid_moves[selected_piece]:
@@ -128,6 +137,8 @@ func _on_piece_selected(item):
 			candidate_instances.append(instance)
 			instance.move = tiles_to_moves[position][selected_piece][0]
 			instance.move_selected.connect(_on_move_selected)
+			instance.move_highlighted.connect(_on_move_highlighted)
+			instance.move_leaved.connect(_on_move_leaved)
 			instance.set_position(hex_to_xy(position))
 			add_child(instance)
 
@@ -232,25 +243,31 @@ func _on_item_list_item_selected(index):
 		candidate_instances.append(instance)
 		instance.move = tiles_to_moves[position][item][0]
 		instance.move_selected.connect(_on_move_selected)
+		instance.move_highlighted.connect(_on_move_highlighted)
+		instance.move_leaved.connect(_on_move_leaved)
 		instance.set_position(hex_to_xy(position))
 		add_child(instance)
 		
 	if name_to_instances.has(selected_piece):
 		print("Changing color of %s to green."%selected_piece)
-		change_piece_color_highlight(selected_piece, Color(0, 1, 0))
+		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW)
 		
 	if last_selected_piece != null and name_to_instances.has(last_selected_piece):
 		print("Changing color of %s to white."%last_selected_piece)
-		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1))
+		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW)
 
-func change_piece_color_highlight(piece, color):
+func change_piece_color_highlight(piece, color, target_grow):
 	var selected_instance = name_to_instances[piece]
 	var mesh3D = selected_instance.get_node("piece").get_node("Circle")
 	var material = mesh3D.get_surface_override_material(0)
 	var next_pass_material = material.get_next_pass().duplicate()
-	next_pass_material.albedo_color = color
+	var tween = get_tree().create_tween().set_parallel(true)
+	tween.tween_property(next_pass_material, "albedo_color", color, 0.2).set_trans(Tween.TRANS_QUINT)
+	tween.tween_property(next_pass_material, "grow_amount", target_grow, 0.3).set_trans(Tween.TRANS_BACK)
+	#tween.chain().tween_property(next_pass_material, "grow_amount", 0.05, 0.1).set_trans(Tween.TRANS_EXPO)
 	material.set_next_pass(next_pass_material)
 	mesh3D.set_surface_override_material(0, material)
+	
 
 func _on_move_selected(move):
 	if valid_movestrings.has(move):
@@ -261,9 +278,37 @@ func _on_move_selected(move):
 		last_selected_piece = selected_piece
 		selected_piece = null
 		print("Resetting color of %s to white."%last_selected_piece)
-		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1))
+		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW)
 	else:
 		print("INVALID CLICK MOVE: %s"%move)
+
+
+func _on_move_highlighted(move):
+	for instance in candidate_instances:
+		if instance.move == move:
+			var mesh3D = instance.get_node("Circle")
+			var material = mesh3D.get_surface_override_material(0).duplicate()
+			var tween = get_tree().create_tween().set_parallel(true);
+			var pos = instance.position
+			tween.tween_property(instance, "position", Vector3(pos.x, pos.y+ 0.25 , pos.z ), 0.15).set_trans(Tween.TRANS_BACK)
+			
+			var set_shader_value = (func set_shader_value(value):
+				material.set_shader_parameter("emission_color", value))
+			tween.tween_method(set_shader_value, Color(0, 0, 0), Color(1, 0, 0), 0.3).set_trans(Tween.TRANS_BACK)
+			mesh3D.set_surface_override_material(0, material)
+
+func _on_move_leaved(move):
+	for instance in candidate_instances:
+		if instance.move == move:
+			var mesh3D = instance.get_node("Circle")
+			var material = mesh3D.get_surface_override_material(0).duplicate()
+			var tween = get_tree().create_tween().set_parallel(true);
+			var pos = instance.position
+			tween.tween_property(instance, "position", Vector3(pos.x, pos.y- 0.25, pos.z ), 0.15).set_trans(Tween.TRANS_BACK)
+			var set_shader_value = (func set_shader_value(value):
+				material.set_shader_parameter("emission_color", value))
+			tween.tween_method(set_shader_value, Color(1, 0, 0), Color(0, 0, 0), 0.3).set_trans(Tween.TRANS_EXPO)
+			mesh3D.set_surface_override_material(0, material)		
 
 func count_bugs_on_tile(tile):
 	var found_bugs = 0
