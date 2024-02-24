@@ -45,6 +45,7 @@ func _ready():
 			bugs[color_bug] = load("res://bugs//%s//%s.tscn"%[colors[color], color_bug])
 	candidate_scene = preload("res://bugs//piece_candidate.tscn")
 	current_turn_color = "w"
+	$"../menu".disable_resume(true)
 	Input.set_custom_mouse_cursor(pointer)
 	$"../AudioPlayerPiece".stream = piece_sound
 	$"../AudioPlayerTick".stream = tick_sound
@@ -221,6 +222,22 @@ func _on_server_server_response(response: String):
 			push_command(command)
 			
 func handle_server_response(response_string: String):
+	if last_command_sent.substr(0, 4) == "play":
+		var game_state = response_string.split(";")[1]
+		match game_state:
+			"WhiteWins": 
+				menu_visible = true
+				$"../menu".set_visible(menu_visible)
+				$"../menu".set_label("White Wins !")
+				$"../menu".disable_resume(true)
+			"BlackWins": 
+				menu_visible = true
+				$"../menu".set_visible(menu_visible)
+				$"../menu".set_label("Black Wins !")
+				$"../menu".disable_resume(true)
+			"InProgress": 
+				$"../menu".set_label("In Progress")
+			
 	if last_command_sent == "validmoves\n":
 		valid_moves = {}
 		tiles_to_moves = {}
@@ -407,6 +424,7 @@ func _on_menu_new_game():
 	clear_waiting_pieces()
 	menu_visible = false
 	$"../menu".set_visible(menu_visible)
+	$"../menu".disable_resume(false)
 	
 
 func _on_menu_quit():

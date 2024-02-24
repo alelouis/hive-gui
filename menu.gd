@@ -18,6 +18,11 @@ func _on_resume_pressed():
 func _on_newgame_pressed():
 	emit_signal("new_game")
 
-
 func _on_quit_pressed():
 	emit_signal("quit")
+
+func set_label(string):
+	$MarginContainer/VBoxContainer/label.text = string
+	
+func disable_resume(state):
+	$MarginContainer/VBoxContainer/resume.disabled = state

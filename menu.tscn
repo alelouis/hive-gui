@@ -45,6 +45,16 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
+[node name="label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.294118, 0.286275, 0.360784, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = ExtResource("1_xqoku")
+theme_override_font_sizes/font_size = 120
+text = "Hive"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="resume" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 2.08165e-12)
 layout_mode = 2
