@@ -22,3 +22,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.2, 2.08165e-12
 shape = SubResource("CylinderShape3D_3mjsq")
 
 [connection signal="input_event" from="Circle/Area3D" to="." method="_on_area_3d_input_event"]
+[connection signal="mouse_entered" from="Circle/Area3D" to="." method="_on_area_3d_mouse_entered"]
+[connection signal="mouse_exited" from="Circle/Area3D" to="." method="_on_area_3d_mouse_exited"]

@@ -7,7 +7,7 @@ render_priority = -2
 blend_mode = 2
 cull_mode = 1
 shading_mode = 0
-albedo_color = Color(0.054902, 0.160784, 0.0941176, 1)
+albedo_color = Color(0, 0.172549, 0.101961, 1)
 grow = true
 grow_amount = 0.05
 

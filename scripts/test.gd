@@ -13,6 +13,7 @@ signal server_response
 
 func _ready() -> void:
 	pid = OS.create_process("/Users/alelouis/Projects/hive-rust/target/release/server", [])
+	#pid = OS.create_process("/Users/alelouis/Downloads/Mzinga.MacOSArm64/MzingaEngine", [])
 	OS.delay_msec(500)	
 	_client.connected.connect(_handle_client_connected)
 	_client.disconnected.connect(_handle_client_disconnected)

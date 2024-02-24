@@ -6,9 +6,11 @@ var scroll_sensitivity = 0.05
 
 var scroll_level = 0
 var camera_init_position
+var camera_init_rotation
 
 func _ready():
 	camera_init_position = %Camera3D.position
+	camera_init_rotation = rotation
 
 func _input(event):
 
@@ -18,7 +20,7 @@ func _input(event):
 	if event is InputEventMouseMotion and dragging:
 		rotation.y -= event.relative.x*rotation_sensitivity
 		rotation.x -= event.relative.y*rotation_sensitivity
-		rotation.x = clamp(rotation.x,0,PI/2.0)
+		rotation.x = clamp(rotation.x,0,PI/2.0-PI/8.0)
 
 	if event is InputEventMouseButton:
 		var pos = %Camera3D.position
@@ -61,3 +63,4 @@ func _on_generate_new_piece(name_to_instances):
 	var biggest_distance = compute_max_dist(name_to_instances)
 	tween.tween_property(%Camera3D, "position", camera_init_position * sqrt(biggest_distance), 1).set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(self, "position", mean_pos, 1).set_trans(Tween.TRANS_QUINT)
+	tween.tween_property(self, "rotation", camera_init_rotation, 1).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)

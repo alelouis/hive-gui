@@ -1,6 +1,7 @@
 extends Node3D
 
 var move: String
+var theo_position
 signal move_selected
 signal move_highlighted
 signal move_leaved

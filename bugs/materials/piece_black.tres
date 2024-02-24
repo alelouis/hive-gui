@@ -3,7 +3,6 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5780"]
 cull_mode = 1
 shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.05
 

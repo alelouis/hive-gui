@@ -2,9 +2,17 @@ extends Node
 
 signal new_piece
 
+var cursor = load("res://png/cursor.png")
+var pointer = load("res://png/pointer.png")
+
+var piece_sound = preload("res://sounds/piece.wav")
+var tick_sound = preload("res://sounds/tick.wav")
+var pick_sound = preload("res://sounds/pick.wav")
+
 var current_turn_color
 var name_to_tiles = {}
 var name_to_instances = {}
+var waiting_pieces = {}
 var bugs = {}
 var last_command_sent
 var last_command_status
@@ -16,9 +24,17 @@ var candidate_instances = []
 var tiles_to_moves = {}
 var last_selected_piece = null
 var selected_piece = null
+var menu_visible = true
 
 var SELECT_GROW = 0.09
 var DEFAULT_GROW = 0.03
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_ESCAPE:
+			menu_visible = !menu_visible
+			$"../menu".set_visible(menu_visible)
+			
 
 func _ready():
 	var color_bug
@@ -29,6 +45,10 @@ func _ready():
 			bugs[color_bug] = load("res://bugs//%s//%s.tscn"%[colors[color], color_bug])
 	candidate_scene = preload("res://bugs//piece_candidate.tscn")
 	current_turn_color = "w"
+	Input.set_custom_mouse_cursor(pointer)
+	$"../AudioPlayerPiece".stream = piece_sound
+	$"../AudioPlayerTick".stream = tick_sound
+	$"../AudioPlayerPick".stream = pick_sound
 	
 	
 func process_move_string(move_string: String, name_to_tiles: Dictionary):
@@ -110,7 +130,11 @@ func place_or_move(move_string):
 		piece.get_node("piece").piece_selected.connect(_on_piece_selected)
 		name_to_instances[source] = piece
 		add_child(piece)
-	name_to_instances[source].set_position(hex_to_xy(tile))
+	
+	var tween = get_tree().create_tween().set_parallel(true)
+	var target_position = hex_to_xy(tile)
+	name_to_instances[source].set_position(Vector3(target_position.x, target_position.y + 0.3, target_position.z))
+	tween.tween_property(name_to_instances[source], "position", target_position, 0.4).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	name_to_tiles[source] = tile
 	emit_signal("new_piece", name_to_instances)
 	if current_turn_color == "w":
@@ -120,26 +144,41 @@ func place_or_move(move_string):
 
 func _on_piece_selected(item):
 	clear_candidates()
+	$"../AudioPlayerPick".play()
 	var instance
 	if item != selected_piece:
 		last_selected_piece = selected_piece
 		selected_piece = item
 		
-	if last_selected_piece != null and name_to_instances.has(last_selected_piece):
-		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW)
+	if last_selected_piece != null:
+		if name_to_instances.has(last_selected_piece):
+			change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, name_to_instances)
+		if waiting_pieces.has(last_selected_piece):
+			change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, waiting_pieces)
 		
 	if name_to_instances.has(selected_piece) and current_turn_color == selected_piece.substr(0, 1):
-		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW)
+		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW, name_to_instances)
+		
+	if waiting_pieces.has(selected_piece):
+		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW, waiting_pieces)
 			
 	if valid_moves.has(selected_piece):
+		var idx_candidate = 0
 		for position in valid_moves[selected_piece]:
+			idx_candidate += 1
 			instance = candidate_scene.instantiate()
 			candidate_instances.append(instance)
 			instance.move = tiles_to_moves[position][selected_piece][0]
+			instance.theo_position = hex_to_xy(position)
 			instance.move_selected.connect(_on_move_selected)
 			instance.move_highlighted.connect(_on_move_highlighted)
 			instance.move_leaved.connect(_on_move_leaved)
-			instance.set_position(hex_to_xy(position))
+			
+			var target_position = hex_to_xy(position)
+			var tween = get_tree().create_tween().set_parallel(true)
+			instance.set_position(Vector3(target_position.x, target_position.y - 0.3, target_position.z))
+			tween.tween_property(instance, "position", target_position, 0.5).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+			
 			add_child(instance)
 
 func push_command(command: String):
@@ -149,7 +188,6 @@ func push_command(command: String):
 
 func queue_command(command: String):
 	queued_commands.append(command)
-	
 
 func _on_command_text_changed():
 	if $"../Control/GridContainer/command".text.ends_with("\n"):
@@ -193,10 +231,8 @@ func handle_server_response(response_string: String):
 		valid_movestrings = candidate_moves
 		for c_move in candidate_moves:
 			out = process_move_string(c_move, name_to_tiles)
-			
 			source = out[0]
 			target = out[1]
-			
 			if tiles_to_moves.has(target):
 				if tiles_to_moves[target].has(source):
 					tiles_to_moves[target][source].append(c_move)
@@ -204,7 +240,6 @@ func handle_server_response(response_string: String):
 					tiles_to_moves[target][source] = [c_move]
 			else:
 				tiles_to_moves[target] = {source: [c_move]} 
-			
 			if valid_moves.has(source):
 				if !valid_moves[source].has(target):
 					valid_moves[source].append(target)
@@ -212,23 +247,52 @@ func handle_server_response(response_string: String):
 				valid_moves[source] = [target]
 		
 		$"../Control/HFlowContainer/ItemList".clear()
-		for available_piece in valid_moves:
-			$"../Control/HFlowContainer/ItemList".add_item(available_piece)
+		var waiting_piece
+		var idx = 0
+		
+		var waiting_moves = []
+		for playable_piece in valid_moves:
+			if !name_to_instances.has(playable_piece):
+				waiting_moves.append(playable_piece)
+				
+		var waiting_count = waiting_moves.size() * 1.0
+		for available_piece in waiting_moves:
+			if !name_to_instances.has(available_piece):
+				#$"../Control/HFlowContainer/ItemList".add_item(available_piece)
+				waiting_piece = bugs[available_piece.substr(0, 2)].instantiate()
+				
+				waiting_pieces[available_piece] = waiting_piece
+				waiting_piece.get_node("piece").whoami = available_piece
+				waiting_piece.get_node("piece").piece_selected.connect(_on_piece_selected)
+				waiting_piece.get_node("piece").piece_highlighted.connect(_on_waiting_piece_highlighted)
+				waiting_piece.get_node("piece").piece_leaved.connect(_on_waiting_piece_leaved)
+				waiting_piece.set_rotation_degrees(Vector3(60, 0, 0))
+				waiting_piece.set_position(Vector3((idx - waiting_count / 2.0 + 0.5)*0.1, -0.4, -5))
+				waiting_piece.set_scale(Vector3(0.05, 0.05, 0.05))
+				idx += 1
+				get_tree().get_root().get_node("Node3D").get_node("Origin").get_node("Camera3D").add_child(waiting_piece)
 
 
-func _on_button_pressed():
-	for inst in name_to_instances.values():
-		inst.queue_free()
-	name_to_tiles = {}
-	name_to_instances = {}
-	push_command("newgame\n")
-	queue_command("validmoves\n")
+func _on_waiting_piece_highlighted(piece):
+	var tween = get_tree().create_tween()
+	tween.tween_property(waiting_pieces[piece], "rotation_degrees", Vector3(75, 0, 0), 0.4).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	$"../AudioPlayerTick".play()
+	
+func _on_waiting_piece_leaved(piece):
+	var tween = get_tree().create_tween()
+	tween.tween_property(waiting_pieces[piece], "rotation_degrees", Vector3(60, 0, 0), 0.4).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 
 func clear_candidates():
 	if candidate_instances.size() > 0:
 		for existing_instance in candidate_instances:
 			existing_instance.queue_free()
 	candidate_instances = []
+
+func clear_waiting_pieces():
+	if waiting_pieces.size() > 0:
+		for existing_instance in waiting_pieces:
+			waiting_pieces[existing_instance].queue_free()
+	waiting_pieces = {}
 
 func _on_item_list_item_selected(index):
 	clear_candidates()
@@ -237,11 +301,12 @@ func _on_item_list_item_selected(index):
 	if item != selected_piece:
 		last_selected_piece = selected_piece
 		selected_piece = item
-		
+	
 	for position in valid_moves[item]:
 		instance = candidate_scene.instantiate()
 		candidate_instances.append(instance)
 		instance.move = tiles_to_moves[position][item][0]
+		instance.theo_position = hex_to_xy(position)
 		instance.move_selected.connect(_on_move_selected)
 		instance.move_highlighted.connect(_on_move_highlighted)
 		instance.move_leaved.connect(_on_move_leaved)
@@ -250,21 +315,20 @@ func _on_item_list_item_selected(index):
 		
 	if name_to_instances.has(selected_piece):
 		print("Changing color of %s to green."%selected_piece)
-		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW)
+		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW, name_to_instances)
 		
 	if last_selected_piece != null and name_to_instances.has(last_selected_piece):
 		print("Changing color of %s to white."%last_selected_piece)
-		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW)
+		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, name_to_instances)
 
-func change_piece_color_highlight(piece, color, target_grow):
-	var selected_instance = name_to_instances[piece]
+func change_piece_color_highlight(piece, color, target_grow, piece_set):
+	var selected_instance = piece_set[piece]
 	var mesh3D = selected_instance.get_node("piece").get_node("Circle")
 	var material = mesh3D.get_surface_override_material(0)
 	var next_pass_material = material.get_next_pass().duplicate()
 	var tween = get_tree().create_tween().set_parallel(true)
 	tween.tween_property(next_pass_material, "albedo_color", color, 0.2).set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(next_pass_material, "grow_amount", target_grow, 0.3).set_trans(Tween.TRANS_BACK)
-	#tween.chain().tween_property(next_pass_material, "grow_amount", 0.05, 0.1).set_trans(Tween.TRANS_EXPO)
 	material.set_next_pass(next_pass_material)
 	mesh3D.set_surface_override_material(0, material)
 	
@@ -272,13 +336,15 @@ func change_piece_color_highlight(piece, color, target_grow):
 func _on_move_selected(move):
 	if valid_movestrings.has(move):
 		place_or_move(move)
+		clear_waiting_pieces()
 		clear_candidates()
 		push_command("play %s\n"%move)
 		queue_command("validmoves\n")
+		$"../AudioPlayerPiece".play()
 		last_selected_piece = selected_piece
 		selected_piece = null
 		print("Resetting color of %s to white."%last_selected_piece)
-		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW)
+		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, name_to_instances)
 	else:
 		print("INVALID CLICK MOVE: %s"%move)
 
@@ -290,11 +356,16 @@ func _on_move_highlighted(move):
 			var material = mesh3D.get_surface_override_material(0).duplicate()
 			var tween = get_tree().create_tween().set_parallel(true);
 			var pos = instance.position
-			tween.tween_property(instance, "position", Vector3(pos.x, pos.y+ 0.25 , pos.z ), 0.15).set_trans(Tween.TRANS_BACK)
-			
+			var th_pos = instance.theo_position
+			tween.tween_property(instance, "position", Vector3(th_pos.x, th_pos.y + 0.25 , th_pos.z ), 0.1).set_trans(Tween.TRANS_LINEAR)
+			var high_color
+			if current_turn_color == "b":
+				high_color = Color(0, 0, 1)
+			else:
+				high_color = Color(1, 0, 0)
 			var set_shader_value = (func set_shader_value(value):
 				material.set_shader_parameter("emission_color", value))
-			tween.tween_method(set_shader_value, Color(0, 0, 0), Color(1, 0, 0), 0.3).set_trans(Tween.TRANS_BACK)
+			tween.tween_method(set_shader_value, Color(0, 0, 0), high_color, 0.3).set_trans(Tween.TRANS_LINEAR)
 			mesh3D.set_surface_override_material(0, material)
 
 func _on_move_leaved(move):
@@ -304,10 +375,16 @@ func _on_move_leaved(move):
 			var material = mesh3D.get_surface_override_material(0).duplicate()
 			var tween = get_tree().create_tween().set_parallel(true);
 			var pos = instance.position
-			tween.tween_property(instance, "position", Vector3(pos.x, pos.y- 0.25, pos.z ), 0.15).set_trans(Tween.TRANS_BACK)
+			var th_pos = instance.theo_position
+			tween.tween_property(instance, "position", Vector3(th_pos.x, th_pos.y, th_pos.z ), 0.1).set_trans(Tween.TRANS_LINEAR)
+			var high_color
+			if current_turn_color == "b":
+				high_color = Color(0, 0, 1)
+			else:
+				high_color = Color(1, 0, 0)
 			var set_shader_value = (func set_shader_value(value):
 				material.set_shader_parameter("emission_color", value))
-			tween.tween_method(set_shader_value, Color(1, 0, 0), Color(0, 0, 0), 0.3).set_trans(Tween.TRANS_EXPO)
+			tween.tween_method(set_shader_value, high_color, Color(0, 0, 0), 0.3).set_trans(Tween.TRANS_LINEAR)
 			mesh3D.set_surface_override_material(0, material)		
 
 func count_bugs_on_tile(tile):
@@ -316,3 +393,37 @@ func count_bugs_on_tile(tile):
 		if name_to_tiles[name] == tile:
 			found_bugs += 1
 	return found_bugs
+
+
+func _on_menu_new_game():
+	for inst in name_to_instances.values():
+		inst.queue_free()
+	name_to_tiles = {}
+	name_to_instances = {}
+	push_command("newgame\n")
+	queue_command("validmoves\n")
+	clear_candidates()
+	
+	clear_waiting_pieces()
+	menu_visible = false
+	$"../menu".set_visible(menu_visible)
+	
+
+func _on_menu_quit():
+	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+	get_tree().quit()
+
+
+func _on_menu_resume():
+	menu_visible = false
+	$"../menu".set_visible(menu_visible)
+
+func _on_home_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			menu_visible = !menu_visible
+			$"../menu".set_visible(menu_visible)
+			
+
+
+

@@ -1,10 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://3rks5tr7jm3"]
+[gd_scene load_steps=12 format=3 uid="uid://3rks5tr7jm3"]
 
 [ext_resource type="Script" path="res://scripts/test.gd" id="1_f62ic"]
 [ext_resource type="Script" path="res://hive.gd" id="1_j5bog"]
 [ext_resource type="Script" path="res://scripts/client.gd" id="2_flhco"]
 [ext_resource type="Script" path="res://scripts/generate.gd" id="3_mmdec"]
 [ext_resource type="Script" path="res://scripts/Origin.gd" id="4_usp4i"]
+[ext_resource type="PackedScene" uid="uid://chqjvgdut7blp" path="res://menu.tscn" id="6_8g8u4"]
+[ext_resource type="Texture2D" uid="uid://dskbiltwmrtfu" path="res://structure_house.png" id="7_xiou1"]
+[ext_resource type="Script" path="res://AudioStreamPlayer2D.gd" id="8_5ftfi"]
+
+[sub_resource type="Environment" id="Environment_y5dfr"]
+background_mode = 1
+background_color = Color(0.0784314, 0.0941176, 0.121569, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.580392, 0.305882, 0.227451, 1)
+ambient_light_energy = 8.09
+tonemap_exposure = 1.26
+fog_light_color = Color(0.254902, 0.145098, 0.0745098, 1)
+fog_light_energy = 3.9
+fog_sun_scatter = 0.17
+fog_sky_affect = 0.459
+adjustment_enabled = true
+adjustment_saturation = 1.64
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hij6"]
 albedo_color = Color(0.0470588, 0.0862745, 0.152941, 1)
@@ -13,6 +30,9 @@ albedo_color = Color(0.0470588, 0.0862745, 0.152941, 1)
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_j5bog")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_y5dfr")
 
 [node name="Server" type="Node" parent="."]
 script = ExtResource("1_f62ic")
@@ -28,6 +48,16 @@ transform = Transform3D(0.706872, -0.409186, 0.576974, 1.17229e-16, 0.815694, 0.
 light_energy = 0.528
 shadow_enabled = true
 shadow_blur = 1.517
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.543409, 0.485619, -0.684749, -2.11856e-08, 0.815694, 0.578484, 0.839468, -0.314353, 0.443255, -2.01071, 2.22766, 3.74833)
+light_color = Color(0.623529, 0.458824, 0.439216, 1)
+light_energy = 1.494
+light_indirect_energy = 0.638
+light_volumetric_fog_energy = 2.811
+shadow_enabled = true
+shadow_blur = 1.517
+sky_mode = 1
 
 [node name="Origin" type="Node3D" parent="."]
 script = ExtResource("4_usp4i")
@@ -52,6 +82,7 @@ material_override = SubResource("StandardMaterial3D_0hij6")
 mesh = SubResource("PlaneMesh_m451s")
 
 [node name="Control" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -81,7 +112,6 @@ theme_override_font_sizes/font_size = 40
 auto_height = true
 
 [node name="GridContainer" type="GridContainer" parent="Control"]
-visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -136,9 +166,44 @@ draw_control_chars = true
 draw_tabs = true
 draw_spaces = true
 
+[node name="menu" parent="." instance=ExtResource("6_8g8u4")]
+
+[node name="Control2" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Control2"]
+layout_mode = 1
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+
+[node name="home" type="TextureRect" parent="Control2/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("7_xiou1")
+
+[node name="AudioPlayerPiece" type="AudioStreamPlayer2D" parent="."]
+volume_db = 3.0
+attenuation = 1e-05
+script = ExtResource("8_5ftfi")
+
+[node name="AudioPlayerTick" type="AudioStreamPlayer2D" parent="."]
+attenuation = 1e-05
+
+[node name="AudioPlayerPick" type="AudioStreamPlayer2D" parent="."]
+attenuation = 1e-05
+
 [connection signal="server_response" from="Server" to="Generate" method="_on_server_server_response"]
 [connection signal="new_piece" from="Generate" to="Origin" method="_on_generate_new_piece"]
+[connection signal="new_piece" from="Generate" to="AudioPlayerPiece" method="_on_generate_new_piece"]
 [connection signal="pressed" from="Control/HFlowContainer/Button" to="Generate" method="_on_button_pressed"]
 [connection signal="item_selected" from="Control/HFlowContainer/ItemList" to="Generate" method="_on_item_list_item_selected"]
 [connection signal="text_changed" from="Control/GridContainer/command" to="Generate" method="_on_command_text_changed"]
 [connection signal="text_set" from="Control/GridContainer/client_request" to="Server" method="_on_client_request_text_set"]
+[connection signal="new_game" from="menu" to="Generate" method="_on_menu_new_game"]
+[connection signal="quit" from="menu" to="Generate" method="_on_menu_quit"]
+[connection signal="resume" from="menu" to="Generate" method="_on_menu_resume"]
+[connection signal="gui_input" from="Control2/MarginContainer/home" to="Generate" method="_on_home_gui_input"]

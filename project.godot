@@ -24,3 +24,5 @@ window/size/resizable=false
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.192157, 0.0941176, 0.0352941, 1)
+anti_aliasing/quality/msaa_3d=1
+anti_aliasing/quality/screen_space_aa=1
