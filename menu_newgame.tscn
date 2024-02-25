@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://dqk5guyhy7d2f"]
+
+[ext_resource type="Script" path="res://menu_newgame.gd" id="1_ym1tv"]
+[ext_resource type="Material" uid="uid://dt3lnv2l4qake" path="res://materials/blur.tres" id="2_ml1l6"]
+[ext_resource type="FontFile" uid="uid://wrj07pficpyr" path="res://hurmit_font.otf" id="3_3q5ui"]
+[ext_resource type="StyleBox" uid="uid://bu3jwtmsxd1g" path="res://button_style.tres" id="4_r40xt"]
+[ext_resource type="StyleBox" uid="uid://d36lqeme2wp2j" path="res://button_style_hover.tres" id="5_3u6mm"]
+
+[sub_resource type="Theme" id="Theme_deygb"]
+default_font = ExtResource("3_3q5ui")
+default_font_size = 80
+
+[node name="menu_newgame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ym1tv")
+
+[node name="blur" type="ColorRect" parent="."]
+material = ExtResource("2_ml1l6")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -47.5
+offset_top = -20.0
+offset_right = 47.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.294118, 0.286275, 0.360784, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = ExtResource("3_3q5ui")
+theme_override_font_sizes/font_size = 120
+text = "Choose type"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="human_vs_human" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(600, 2.08165e-12)
+layout_mode = 2
+theme = SubResource("Theme_deygb")
+theme_override_styles/normal = ExtResource("4_r40xt")
+theme_override_styles/hover = ExtResource("5_3u6mm")
+text = "Human vs Human"
+
+[node name="human_vs_ai" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(600, 2.08165e-12)
+layout_mode = 2
+theme = SubResource("Theme_deygb")
+theme_override_styles/normal = ExtResource("4_r40xt")
+theme_override_styles/hover = ExtResource("5_3u6mm")
+text = "Human vs AI"
+
+[node name="back" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_deygb")
+theme_override_styles/normal = ExtResource("4_r40xt")
+theme_override_styles/hover = ExtResource("5_3u6mm")
+text = "back"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/human_vs_human" to="." method="_on_human_vs_human_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/human_vs_ai" to="." method="_on_human_vs_ai_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/back" to="." method="_on_back_pressed"]

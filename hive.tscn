@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://3rks5tr7jm3"]
+[gd_scene load_steps=13 format=3 uid="uid://3rks5tr7jm3"]
 
 [ext_resource type="Script" path="res://scripts/test.gd" id="1_f62ic"]
 [ext_resource type="Script" path="res://hive.gd" id="1_j5bog"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/generate.gd" id="3_mmdec"]
 [ext_resource type="Script" path="res://scripts/Origin.gd" id="4_usp4i"]
 [ext_resource type="PackedScene" uid="uid://chqjvgdut7blp" path="res://menu.tscn" id="6_8g8u4"]
+[ext_resource type="PackedScene" uid="uid://dqk5guyhy7d2f" path="res://menu_newgame.tscn" id="7_6o1rg"]
 [ext_resource type="Texture2D" uid="uid://dskbiltwmrtfu" path="res://structure_house.png" id="7_xiou1"]
 [ext_resource type="Script" path="res://AudioStreamPlayer2D.gd" id="8_5ftfi"]
 
@@ -168,6 +169,8 @@ draw_spaces = true
 
 [node name="menu" parent="." instance=ExtResource("6_8g8u4")]
 
+[node name="menu_newgame" parent="." instance=ExtResource("7_6o1rg")]
+
 [node name="Control2" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -206,4 +209,7 @@ attenuation = 1e-05
 [connection signal="new_game" from="menu" to="Generate" method="_on_menu_new_game"]
 [connection signal="quit" from="menu" to="Generate" method="_on_menu_quit"]
 [connection signal="resume" from="menu" to="Generate" method="_on_menu_resume"]
+[connection signal="back" from="menu_newgame" to="Generate" method="_on_menu_newgame_back"]
+[connection signal="human_vs_ai" from="menu_newgame" to="Generate" method="_on_menu_newgame_human_vs_ai"]
+[connection signal="human_vs_human" from="menu_newgame" to="Generate" method="_on_menu_newgame_human_vs_human"]
 [connection signal="gui_input" from="Control2/MarginContainer/home" to="Generate" method="_on_home_gui_input"]

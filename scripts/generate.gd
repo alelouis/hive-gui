@@ -25,6 +25,7 @@ var tiles_to_moves = {}
 var last_selected_piece = null
 var selected_piece = null
 var menu_visible = true
+var playing_vs_ia = false
 
 var SELECT_GROW = 0.09
 var DEFAULT_GROW = 0.03
@@ -34,7 +35,7 @@ func _input(event):
 		if event.keycode == KEY_ESCAPE:
 			menu_visible = !menu_visible
 			$"../menu".set_visible(menu_visible)
-			
+			$"../menu_newgame".set_visible(false)
 
 func _ready():
 	var color_bug
@@ -46,6 +47,7 @@ func _ready():
 	candidate_scene = preload("res://bugs//piece_candidate.tscn")
 	current_turn_color = "w"
 	$"../menu".disable_resume(true)
+	$"../menu_newgame".set_visible(false)
 	Input.set_custom_mouse_cursor(pointer)
 	$"../AudioPlayerPiece".stream = piece_sound
 	$"../AudioPlayerTick".stream = tick_sound
@@ -191,6 +193,8 @@ func queue_command(command: String):
 	queued_commands.append(command)
 
 func _on_command_text_changed():
+	pass
+	"""
 	if $"../Control/GridContainer/command".text.ends_with("\n"):
 		var move_string = $"../Control/GridContainer/command".text
 		$"../Control/GridContainer/command".text = ""
@@ -200,6 +204,7 @@ func _on_command_text_changed():
 			queue_command("validmoves\n")
 		else:
 			print("Illegal move")
+	"""
 
 func _on_server_server_response(response: String):
 	var split_response = response.split("\n")
@@ -237,7 +242,14 @@ func handle_server_response(response_string: String):
 				$"../menu".disable_resume(true)
 			"InProgress": 
 				$"../menu".set_label("In Progress")
-			
+	
+	if last_command_sent == "bestmove\n":
+		place_or_move(response_string)
+		clear_waiting_pieces()
+		clear_candidates()
+		queue_command("validmoves\n")
+		queue_command("play %s\n"%response_string)
+	
 	if last_command_sent == "validmoves\n":
 		valid_moves = {}
 		tiles_to_moves = {}
@@ -356,7 +368,10 @@ func _on_move_selected(move):
 		clear_waiting_pieces()
 		clear_candidates()
 		push_command("play %s\n"%move)
-		queue_command("validmoves\n")
+		if playing_vs_ia:
+			queue_command("bestmove\n")
+		else:
+			queue_command("validmoves\n")
 		$"../AudioPlayerPiece".play()
 		last_selected_piece = selected_piece
 		selected_piece = null
@@ -411,8 +426,7 @@ func count_bugs_on_tile(tile):
 			found_bugs += 1
 	return found_bugs
 
-
-func _on_menu_new_game():
+func newgame():
 	for inst in name_to_instances.values():
 		inst.queue_free()
 	name_to_tiles = {}
@@ -420,17 +434,31 @@ func _on_menu_new_game():
 	push_command("newgame\n")
 	queue_command("validmoves\n")
 	clear_candidates()
-	
 	clear_waiting_pieces()
+	$"../menu_newgame".set_visible(false)
+	$"../menu".disable_resume(false)
+
+func _on_menu_newgame_human_vs_human():
+	playing_vs_ia = false
+	newgame()
+	
+func _on_menu_newgame_human_vs_ai():
+	playing_vs_ia = true
+	newgame()
+
+func _on_menu_new_game():
 	menu_visible = false
 	$"../menu".set_visible(menu_visible)
-	$"../menu".disable_resume(false)
-	
+	$"../menu_newgame".set_visible(true)
+
+func _on_menu_newgame_back():
+	menu_visible = true
+	$"../menu".set_visible(menu_visible)
+	$"../menu_newgame".set_visible(false)
 
 func _on_menu_quit():
 	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 	get_tree().quit()
-
 
 func _on_menu_resume():
 	menu_visible = false
@@ -442,6 +470,10 @@ func _on_home_gui_input(event):
 			menu_visible = !menu_visible
 			$"../menu".set_visible(menu_visible)
 			
+
+
+
+
 
 
 
