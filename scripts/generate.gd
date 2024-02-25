@@ -163,8 +163,12 @@ func _on_piece_selected(item):
 			change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, name_to_instances)
 		if waiting_pieces.has(last_selected_piece):
 			change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, waiting_pieces)
-		
-	if name_to_instances.has(selected_piece) and current_turn_color == selected_piece.substr(0, 1):
+	
+	var piece_color;
+	match selected_piece.substr(0, 1):
+		"b": piece_color = "Black"
+		"w": piece_color = "White"
+	if name_to_instances.has(selected_piece) and current_turn_color == piece_color:
 		change_piece_color_highlight(selected_piece, Color(0, 1, 0), SELECT_GROW, name_to_instances)
 		
 	if waiting_pieces.has(selected_piece):
@@ -481,9 +485,10 @@ func _on_home_gui_input(event):
 			$"../menu".set_visible(menu_visible)
 			
 
-
-
-
-
-
-
+func _on_area_3d_board_selected():
+	if selected_piece != null:
+		last_selected_piece = selected_piece
+		selected_piece = null
+		print("Resetting color of %s to white."%last_selected_piece)
+		change_piece_color_highlight(last_selected_piece, Color(1, 1, 1), DEFAULT_GROW, name_to_instances)
+		clear_candidates()

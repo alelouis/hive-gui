@@ -13,7 +13,7 @@ config_version=5
 config/name="hive"
 run/main_scene="res://hive.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://icons/appicon.png"
 config/macos_native_icon="res://icons/appicon.icns"
 config/windows_native_icon="res://icons/appicon.ico"
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://3rks5tr7jm3"]
+[gd_scene load_steps=16 format=3 uid="uid://3rks5tr7jm3"]
 
 [ext_resource type="Script" path="res://scripts/test.gd" id="1_f62ic"]
 [ext_resource type="Script" path="res://hive.gd" id="1_j5bog"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/generate.gd" id="3_mmdec"]
 [ext_resource type="Script" path="res://scripts/Origin.gd" id="4_usp4i"]
 [ext_resource type="PackedScene" uid="uid://chqjvgdut7blp" path="res://menu.tscn" id="6_8g8u4"]
+[ext_resource type="Script" path="res://board.gd" id="6_uywat"]
 [ext_resource type="PackedScene" uid="uid://dqk5guyhy7d2f" path="res://menu_newgame.tscn" id="7_6o1rg"]
 [ext_resource type="Texture2D" uid="uid://dskbiltwmrtfu" path="res://structure_house.png" id="7_xiou1"]
 [ext_resource type="Script" path="res://AudioStreamPlayer2D.gd" id="8_5ftfi"]
@@ -24,6 +25,9 @@ fog_sun_scatter = 0.17
 fog_sky_affect = 0.459
 adjustment_enabled = true
 adjustment_saturation = 1.64
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rcjdi"]
+size = Vector3(3, 0.02, 3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hij6"]
 albedo_color = Color(0.0470588, 0.0862745, 0.152941, 1)
@@ -78,10 +82,19 @@ shadow_bias = 1.429
 shadow_transmittance_bias = -2.784
 shadow_opacity = 0.93
 
-[node name="Board" type="MeshInstance3D" parent="."]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 2.08165e-12, -0.43, 2.08165e-12)
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 2.08165e-12, -0.629601, 2.08165e-12)
+script = ExtResource("6_uywat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -0.0029089, 2.08165e-12)
+shape = SubResource("BoxShape3D_rcjdi")
+
+[node name="Board" type="MeshInstance3D" parent="Area3D/CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00500758, 0)
 material_override = SubResource("StandardMaterial3D_0hij6")
 mesh = SubResource("PlaneMesh_m451s")
+skeleton = NodePath("../../..")
 
 [node name="Control" type="Control" parent="."]
 visible = false
@@ -238,6 +251,8 @@ theme_override_font_sizes/font_size = 40
 [connection signal="server_response" from="Server" to="Generate" method="_on_server_server_response"]
 [connection signal="new_piece" from="Generate" to="Origin" method="_on_generate_new_piece"]
 [connection signal="new_piece" from="Generate" to="AudioPlayerPiece" method="_on_generate_new_piece"]
+[connection signal="board_selected" from="Area3D" to="Generate" method="_on_area_3d_board_selected"]
+[connection signal="input_event" from="Area3D" to="Area3D" method="_on_input_event"]
 [connection signal="pressed" from="Control/HFlowContainer/Button" to="Generate" method="_on_button_pressed"]
 [connection signal="item_selected" from="Control/HFlowContainer/ItemList" to="Generate" method="_on_item_list_item_selected"]
 [connection signal="text_changed" from="Control/GridContainer/command" to="Generate" method="_on_command_text_changed"]
