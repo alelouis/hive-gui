@@ -4,6 +4,7 @@ signal new_piece
 
 var cursor = load("res://png/cursor.png")
 var pointer = load("res://png/pointer.png")
+var turn_number = 1
 
 var piece_sound = preload("res://sounds/piece.wav")
 var tick_sound = preload("res://sounds/tick.wav")
@@ -26,6 +27,7 @@ var last_selected_piece = null
 var selected_piece = null
 var menu_visible = true
 var playing_vs_ia = false
+var game_state
 
 var SELECT_GROW = 0.09
 var DEFAULT_GROW = 0.03
@@ -45,7 +47,7 @@ func _ready():
 			color_bug = "%s%s"%[color, bug]
 			bugs[color_bug] = load("res://bugs//%s//%s.tscn"%[colors[color], color_bug])
 	candidate_scene = preload("res://bugs//piece_candidate.tscn")
-	current_turn_color = "w"
+	current_turn_color = "White"
 	$"../menu".disable_resume(true)
 	$"../menu_newgame".set_visible(false)
 	Input.set_custom_mouse_cursor(pointer)
@@ -140,10 +142,13 @@ func place_or_move(move_string):
 	tween.tween_property(name_to_instances[source], "position", target_position, 0.4).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	name_to_tiles[source] = tile
 	emit_signal("new_piece", name_to_instances)
-	if current_turn_color == "w":
-		current_turn_color = "b"
+	turn_number += 1
+	$"../gameinfo/MarginContainer/VBoxContainer/turn_number".text = "Turn %s"%turn_number
+	if current_turn_color == "White":
+		current_turn_color = "Black"
 	else:
-		current_turn_color = "w"
+		current_turn_color = "White"
+	$"../gameinfo/MarginContainer/VBoxContainer/which_to_play".text = "%s to play"%current_turn_color
 
 func _on_piece_selected(item):
 	clear_candidates()
@@ -228,7 +233,7 @@ func _on_server_server_response(response: String):
 			
 func handle_server_response(response_string: String):
 	if last_command_sent.substr(0, 4) == "play":
-		var game_state = response_string.split(";")[1]
+		game_state = response_string.split(";")[1]
 		match game_state:
 			"WhiteWins": 
 				menu_visible = true
@@ -242,64 +247,65 @@ func handle_server_response(response_string: String):
 				$"../menu".disable_resume(true)
 			"InProgress": 
 				$"../menu".set_label("In Progress")
-	
-	if last_command_sent == "bestmove\n":
-		place_or_move(response_string)
-		clear_waiting_pieces()
-		clear_candidates()
-		queue_command("validmoves\n")
-		queue_command("play %s\n"%response_string)
-	
-	if last_command_sent == "validmoves\n":
-		valid_moves = {}
-		tiles_to_moves = {}
-		var out
-		var source
-		var target
-		var candidate_moves = response_string.split(";")
-		valid_movestrings = candidate_moves
-		for c_move in candidate_moves:
-			out = process_move_string(c_move, name_to_tiles)
-			source = out[0]
-			target = out[1]
-			if tiles_to_moves.has(target):
-				if tiles_to_moves[target].has(source):
-					tiles_to_moves[target][source].append(c_move)
+				
+	if game_state == "InProgress":
+		if last_command_sent == "bestmove\n":
+			place_or_move(response_string)
+			clear_waiting_pieces()
+			clear_candidates()
+			queue_command("validmoves\n")
+			queue_command("play %s\n"%response_string)
+		
+		if last_command_sent == "validmoves\n":
+			valid_moves = {}
+			tiles_to_moves = {}
+			var out
+			var source
+			var target
+			var candidate_moves = response_string.split(";")
+			valid_movestrings = candidate_moves
+			for c_move in candidate_moves:
+				out = process_move_string(c_move, name_to_tiles)
+				source = out[0]
+				target = out[1]
+				if tiles_to_moves.has(target):
+					if tiles_to_moves[target].has(source):
+						tiles_to_moves[target][source].append(c_move)
+					else:
+						tiles_to_moves[target][source] = [c_move]
 				else:
-					tiles_to_moves[target][source] = [c_move]
-			else:
-				tiles_to_moves[target] = {source: [c_move]} 
-			if valid_moves.has(source):
-				if !valid_moves[source].has(target):
-					valid_moves[source].append(target)
-			else:
-				valid_moves[source] = [target]
-		
-		$"../Control/HFlowContainer/ItemList".clear()
-		var waiting_piece
-		var idx = 0
-		
-		var waiting_moves = []
-		for playable_piece in valid_moves:
-			if !name_to_instances.has(playable_piece):
-				waiting_moves.append(playable_piece)
-				
-		var waiting_count = waiting_moves.size() * 1.0
-		for available_piece in waiting_moves:
-			if !name_to_instances.has(available_piece):
-				#$"../Control/HFlowContainer/ItemList".add_item(available_piece)
-				waiting_piece = bugs[available_piece.substr(0, 2)].instantiate()
-				
-				waiting_pieces[available_piece] = waiting_piece
-				waiting_piece.get_node("piece").whoami = available_piece
-				waiting_piece.get_node("piece").piece_selected.connect(_on_piece_selected)
-				waiting_piece.get_node("piece").piece_highlighted.connect(_on_waiting_piece_highlighted)
-				waiting_piece.get_node("piece").piece_leaved.connect(_on_waiting_piece_leaved)
-				waiting_piece.set_rotation_degrees(Vector3(60, 0, 0))
-				waiting_piece.set_position(Vector3((idx - waiting_count / 2.0 + 0.5)*0.1, -0.4, -5))
-				waiting_piece.set_scale(Vector3(0.05, 0.05, 0.05))
-				idx += 1
-				get_tree().get_root().get_node("Node3D").get_node("Origin").get_node("Camera3D").add_child(waiting_piece)
+					tiles_to_moves[target] = {source: [c_move]} 
+				if valid_moves.has(source):
+					if !valid_moves[source].has(target):
+						valid_moves[source].append(target)
+				else:
+					valid_moves[source] = [target]
+			
+			$"../Control/HFlowContainer/ItemList".clear()
+			var waiting_piece
+			var idx = 0
+			
+			var waiting_moves = []
+			for playable_piece in valid_moves:
+				if !name_to_instances.has(playable_piece):
+					waiting_moves.append(playable_piece)
+					
+			var waiting_count = waiting_moves.size() * 1.0
+			for available_piece in waiting_moves:
+				if !name_to_instances.has(available_piece):
+					#$"../Control/HFlowContainer/ItemList".add_item(available_piece)
+					waiting_piece = bugs[available_piece.substr(0, 2)].instantiate()
+					
+					waiting_pieces[available_piece] = waiting_piece
+					waiting_piece.get_node("piece").whoami = available_piece
+					waiting_piece.get_node("piece").piece_selected.connect(_on_piece_selected)
+					waiting_piece.get_node("piece").piece_highlighted.connect(_on_waiting_piece_highlighted)
+					waiting_piece.get_node("piece").piece_leaved.connect(_on_waiting_piece_leaved)
+					waiting_piece.set_rotation_degrees(Vector3(60, 0, 0))
+					waiting_piece.set_position(Vector3((idx - waiting_count / 2.0 + 0.5)*0.1, -0.4, -5))
+					waiting_piece.set_scale(Vector3(0.05, 0.05, 0.05))
+					idx += 1
+					get_tree().get_root().get_node("Node3D").get_node("Origin").get_node("Camera3D").add_child(waiting_piece)
 
 
 func _on_waiting_piece_highlighted(piece):
@@ -391,7 +397,7 @@ func _on_move_highlighted(move):
 			var th_pos = instance.theo_position
 			tween.tween_property(instance, "position", Vector3(th_pos.x, th_pos.y + 0.25 , th_pos.z ), 0.1).set_trans(Tween.TRANS_LINEAR)
 			var high_color
-			if current_turn_color == "b":
+			if current_turn_color == "Black":
 				high_color = Color(0, 0, 1)
 			else:
 				high_color = Color(1, 0, 0)
@@ -410,7 +416,7 @@ func _on_move_leaved(move):
 			var th_pos = instance.theo_position
 			tween.tween_property(instance, "position", Vector3(th_pos.x, th_pos.y, th_pos.z ), 0.1).set_trans(Tween.TRANS_LINEAR)
 			var high_color
-			if current_turn_color == "b":
+			if current_turn_color == "Black":
 				high_color = Color(0, 0, 1)
 			else:
 				high_color = Color(1, 0, 0)
@@ -427,6 +433,8 @@ func count_bugs_on_tile(tile):
 	return found_bugs
 
 func newgame():
+	turn_number = 1
+	game_state = "InProgress"
 	for inst in name_to_instances.values():
 		inst.queue_free()
 	name_to_tiles = {}
@@ -437,6 +445,8 @@ func newgame():
 	clear_waiting_pieces()
 	$"../menu_newgame".set_visible(false)
 	$"../menu".disable_resume(false)
+	$"../gameinfo/MarginContainer/VBoxContainer/turn_number".text = "Turn %s"%turn_number
+	$"../gameinfo/MarginContainer/VBoxContainer/which_to_play".text = "%s to play"%current_turn_color
 
 func _on_menu_newgame_human_vs_human():
 	playing_vs_ia = false

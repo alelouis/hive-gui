@@ -14,12 +14,13 @@ config/name="hive"
 run/main_scene="res://hive.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 config/icon="res://icon.svg"
+config/macos_native_icon="res://icons/appicon.icns"
+config/windows_native_icon="res://icons/appicon.ico"
 
 [display]
 
-window/size/viewport_width=1500
-window/size/viewport_height=1500
-window/size/resizable=false
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 
 [rendering]
 

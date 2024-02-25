@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://3rks5tr7jm3"]
+[gd_scene load_steps=14 format=3 uid="uid://3rks5tr7jm3"]
 
 [ext_resource type="Script" path="res://scripts/test.gd" id="1_f62ic"]
 [ext_resource type="Script" path="res://hive.gd" id="1_j5bog"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dqk5guyhy7d2f" path="res://menu_newgame.tscn" id="7_6o1rg"]
 [ext_resource type="Texture2D" uid="uid://dskbiltwmrtfu" path="res://structure_house.png" id="7_xiou1"]
 [ext_resource type="Script" path="res://AudioStreamPlayer2D.gd" id="8_5ftfi"]
+[ext_resource type="FontFile" uid="uid://wrj07pficpyr" path="res://hurmit_font.otf" id="10_hls2y"]
 
 [sub_resource type="Environment" id="Environment_y5dfr"]
 background_mode = 1
@@ -198,6 +199,41 @@ attenuation = 1e-05
 
 [node name="AudioPlayerPick" type="AudioStreamPlayer2D" parent="."]
 attenuation = 1e-05
+
+[node name="gameinfo" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="gameinfo"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -133.0
+offset_bottom = 56.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="gameinfo/MarginContainer"]
+layout_mode = 2
+
+[node name="turn_number" type="Label" parent="gameinfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("10_hls2y")
+theme_override_font_sizes/font_size = 40
+
+[node name="which_to_play" type="Label" parent="gameinfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("10_hls2y")
+theme_override_font_sizes/font_size = 40
 
 [connection signal="server_response" from="Server" to="Generate" method="_on_server_server_response"]
 [connection signal="new_piece" from="Generate" to="Origin" method="_on_generate_new_piece"]

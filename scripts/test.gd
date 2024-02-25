@@ -12,7 +12,14 @@ var pid
 signal server_response
 
 func _ready() -> void:
-	pid = OS.create_process("/Users/alelouis/Projects/hive-rust/target/release/server", [])
+	#pid = OS.create_process("./binaries/server", [])
+	var bin_path
+	if OS.has_feature("editor"):
+		bin_path = ProjectSettings.globalize_path("res://binaries/server")
+	else:
+		bin_path = OS.get_executable_path().get_base_dir().path_join("binaries/server")
+	print(bin_path)
+	pid = OS.create_process(bin_path, [])
 	#pid = OS.create_process("/Users/alelouis/Downloads/Mzinga.MacOSArm64/MzingaEngine", [])
 	OS.delay_msec(500)	
 	_client.connected.connect(_handle_client_connected)
